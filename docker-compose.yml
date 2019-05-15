@@ -1,0 +1,46 @@
+version: "3"
+
+services:
+    web:
+        build: ./docker/nginx
+        ports:
+            - "7000:80"
+        links:
+            - php
+        volumes:
+            - ./var/logs/nginx:/var/log/nginx
+            - ./:/var/www/symfony
+    php:
+        build: ./docker/php-fpm
+        ports:
+            - "9000:9001"
+        volumes:
+            - ./:/var/www/symfony
+            - ./var/logs/symfony:/var/www/symfony/var/log
+        extra_hosts:
+            - "docker-host.localhost:127.0.0.1"
+        links:
+            - redis
+            - database
+        environment:
+            - REDIS_URL=redis://cache
+    redis:
+      image: redis:5.0.2
+      container_name: cache
+      expose:
+        - 6379
+
+    database:
+      image: mysql:5.7
+      environment:
+        - MYSQL_DATABASE=meneame
+        - MYSQL_ROOT_PASSWORD=Meneame321.
+        - MYSQL_USER=meneame
+        - MYSQL_PASSWORD=Meneame321.
+      volumes:
+        - ./var/data/mysql:/var/lib/mysql
+        - ./var/logs/mysql:/var/log
+      expose:
+        - "5006"
+      ports:
+        - "5006:3306"
