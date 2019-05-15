@@ -29,7 +29,8 @@ RUN apk add --update --no-cache \
     php7-xdebug \
     php7-zip \
     make \
-    curl
+    curl \
+    tini
 
 RUN echo "$(curl -sS https://composer.github.io/installer.sig) -" > composer-setup.php.sig \
         && curl -sS https://getcomposer.org/installer | tee composer-setup.php | sha384sum -c composer-setup.php.sig \
@@ -48,6 +49,7 @@ COPY cron /etc/cron.d/cron
 RUN chmod 0644 /etc/cron.d/cron
 RUN crontab /etc/cron.d/cron
 RUN touch /var/log/cron.log
+CMD /usr/sbin/crond -f -L 8 && tail -f /var/log/cron.log
 
 WORKDIR /var/www/symfony
 EXPOSE 9001
