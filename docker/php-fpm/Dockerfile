@@ -44,5 +44,10 @@ COPY symfony.pool.conf /etc/php7/php-fpm.d/
 
 CMD ["php-fpm7", "-F"]
 
+COPY cron /etc/cron.d/cron
+RUN chmod 0644 /etc/cron.d/cron
+RUN crontab /etc/cron.d/cron
+RUN touch /var/log/cron.log
+
 WORKDIR /var/www/symfony
 EXPOSE 9001

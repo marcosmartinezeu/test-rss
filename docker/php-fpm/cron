@@ -1,0 +1,2 @@
+*/1 * * * * /usr/bin/php /var/www/symfony/bin/console meneame:update-rss
+*/1 * * * * /usr/bin/php /var/www/symfony/bin/console meneame:update-rss --status queued
