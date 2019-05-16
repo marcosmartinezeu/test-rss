@@ -18,20 +18,6 @@ Clone this repository using SSH
 git clone ssh://git@vps161376.ovh.net:8022/mmartinez/test-meneame.git
 ```
 
-Install the backend dependencies using composer
-
-```bash
-composer install
-```
-
-If composer install fails, execute in php7 docker container (after docker-compose run)
-
-```bash
-docker-compose exec php7 bash
-composer install
-```
-
-
 # Run
 
 ### Using Docker Compose
@@ -41,6 +27,20 @@ Use Docker Compose to build this application.
 ```bash
 docker-compose up --build -d
 ```
+
+Install the backend dependencies using composer
+
+```bash
+composer install
+```
+
+If composer install fails, execute in php7 docker container (after docker-compose run)
+
+```bash
+docker-compose exec php sh
+composer install
+```
+
 
 # Rss commands
 Console commands have been created to manage the rss news.
