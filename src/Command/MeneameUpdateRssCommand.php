@@ -3,11 +3,9 @@
 namespace App\Command;
 
 use App\Entity\Rss;
-use App\Exception\RssStatusNotValid;
 use App\Repository\RssRepository;
 use App\Service\ExternalApiService;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -43,11 +41,6 @@ class MeneameUpdateRssCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $status = (is_null($input->getOption('status'))) ? RssRepository::STATUS_PUBLISHED : $input->getOption('status');
-
-        // Validate Status
-        if (false === RssRepository::isValidStatus($status)) {
-            throw new RssStatusNotValid(sprintf('Status %s is not valid status: %s', $status, implode(', ', RssRepository::getValidStatus())));
-        }
 
         // Update DB from API
 
