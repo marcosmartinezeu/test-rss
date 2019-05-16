@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use App\Entity\Rss;
 use App\Exception\ExternalApiError;
 use App\Exception\RssStatusNotValid;
 use App\Repository\RssRepository;
@@ -98,6 +97,7 @@ class ExternalApiService
      * @param boolean $forceApi
      * @param string $status (published or queued from Rss entity)
      *
+     * @throws RssStatusNotValid
      * @return array
      */
     public function getRss($status, $forceApi = false)
