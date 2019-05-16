@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Rss;
 use App\Exception\ExternalApiError;
+use App\Exception\RssStatusNotValid;
 use App\Repository\RssRepository;
 use GuzzleHttp;
 use Psr\SimpleCache\CacheInterface;
@@ -101,6 +102,12 @@ class ExternalApiService
      */
     public function getRss($status, $forceApi = false)
     {
+        // Validate status
+        if (RssRepository::isValidStatus($status) === false)
+        {
+            throw new RssStatusNotValid(sprintf('Status %s is not valid status: %s', $status, implode(', ', RssRepository::getValidStatus())));
+        }
+
         $cacheKey = $this->getCacheKeyFromStatus($status);
 
         if (false === $forceApi && $this->cache->has($cacheKey))
