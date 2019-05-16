@@ -63,8 +63,7 @@
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd",
-            "doctrine:migrations:migrate": "symfony-cmd",
-            "affiliate:create conejox http://conejox.com MjYwNS4xLjIuMi4wLjAuMC4wLjA MjYwNS4xLjI1LjQzLjAuMC4wLjAuMA cssPath UA-26020144-23": "symfony-cmd"
+            "doctrine:migrations:migrate -n": "symfony-cmd"
         },
         "post-install-cmd": [
             "@auto-scripts"
