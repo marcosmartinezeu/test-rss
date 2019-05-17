@@ -2,10 +2,8 @@
 
 namespace App\Tests\Command;
 
-use App\Entity\Rss;
 use App\Exception\RssStatusNotValid;
 use App\Repository\RssRepository;
-use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
