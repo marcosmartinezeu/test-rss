@@ -18,6 +18,8 @@ class RssRepository extends ServiceEntityRepository
     const STATUS_PUBLISHED = 'published';
     const STATUS_QUEUED = 'queued';
 
+    const MAX_RESULTS_DEFAULT = 20;
+
     /**
      * @var ExternalApiService
      */
@@ -34,22 +36,26 @@ class RssRepository extends ServiceEntityRepository
         $this->apiService = $apiService;
     }
 
-    // /**
-    //  * @return Rss[] Returns an array of Rss objects
-    //  */
-    /*
-    public function findByExampleField($value)
+
+    /**
+     * Find rss by status
+     *
+     * @param string $status
+     * @param int $maxResults
+     * @return Rss[]
+     */
+    public function findByStatus($status, $maxResults = self::MAX_RESULTS_DEFAULT)
     {
         return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('r.id', 'ASC')
-            ->setMaxResults(10)
+            ->andWhere('r.status = :val')
+            ->setParameter('val', $status)
+            ->orderBy('r.pub_date', 'DESC')
+            ->setMaxResults($maxResults)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
+
 
     /**
      * Update database data from external API RSS
@@ -67,7 +73,7 @@ class RssRepository extends ServiceEntityRepository
                 $rssEntity = new Rss();
             }
             $rssEntity->setLinkId($item['link_id']);
-            $rssEntity->setTitle(utf8_encode($item['title']));
+            $rssEntity->setTitle($item['title']);
             $rssEntity->setVotes($item['votes']);
             $rssEntity->setKarma($item['karma']);
             $rssEntity->setComments($item['comments'][0]);
@@ -80,6 +86,8 @@ class RssRepository extends ServiceEntityRepository
     }
 
     /**
+     * Find one rss by link_id
+     *
      * @param integer $linkId
      * @return Rss|null
      */
