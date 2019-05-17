@@ -14,7 +14,7 @@ MENEAME TEST
 Clone this repository using SSH
 
 ```bash
-git clone ssh://git@vps161376.ovh.net:8022/mmartinez/test-meneame.git
+git clone https://github.com/marcosmartinezeu/test-rss
 ```
 
 # Run
