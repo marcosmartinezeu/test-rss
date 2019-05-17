@@ -6,6 +6,7 @@ use App\Entity\Rss;
 use App\Repository\RssRepository;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -41,6 +42,14 @@ class MeneameMainListCommand extends Command
 
 
     }
+
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     *
+     * @throws InvalidArgumentException
+     * @return int|null|void
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
@@ -48,6 +57,11 @@ class MeneameMainListCommand extends Command
         $maxResults = (is_null($input->getOption('max')))
             ? RssRepository::MAX_RESULTS_DEFAULT
             : $input->getOption('max');
+
+        if (!is_numeric($maxResults))
+        {
+            throw new InvalidArgumentException(sprintf('%s is not numeric value', $maxResults));
+        }
 
         /** @var RssRepository $rssRepository */
         $rssRepository = $this->em->getRepository(Rss::class);
@@ -60,11 +74,14 @@ class MeneameMainListCommand extends Command
             {
                 $table->addRow([$rss->getTitle(), $rss->getVotes(), $rss->getKarma(), $rss->getComments()]);
             }
+
             $table->render();
+            $io->success(sprintf('Showing %s results', count($mainRss)));
+
         }
         else
         {
-            $io->success('Main Rss not found!');
+            $io->success('Main Rss results not found!');
         }
     }
 }

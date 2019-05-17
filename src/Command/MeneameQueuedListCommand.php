@@ -6,6 +6,7 @@ use App\Entity\Rss;
 use App\Repository\RssRepository;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -41,6 +42,13 @@ class MeneameQueuedListCommand extends Command
 
 
     }
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     *
+     * @throws InvalidArgumentException
+     * @return int|null|void
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
@@ -49,22 +57,30 @@ class MeneameQueuedListCommand extends Command
             ? RssRepository::MAX_RESULTS_DEFAULT
             : $input->getOption('max');
 
+        if (!is_numeric($maxResults))
+        {
+            throw new InvalidArgumentException(sprintf('%s is not numeric value', $maxResults));
+        }
+
         /** @var RssRepository $rssRepository */
         $rssRepository = $this->em->getRepository(Rss::class);
-        $mainRss = $rssRepository->findByStatus(RssRepository::STATUS_QUEUED, $maxResults);
-        if (count($mainRss) > 0)
+        $queuedRss = $rssRepository->findByStatus(RssRepository::STATUS_QUEUED, $maxResults);
+        if (count($queuedRss) > 0)
         {
             $table = new Table($output);
             $table->setHeaders(['TITULAR', 'VOTOS', 'KARMA', 'COMENTARIOS']);
-            foreach ($mainRss as $rss)
+            foreach ($queuedRss as $rss)
             {
                 $table->addRow([$rss->getTitle(), $rss->getVotes(), $rss->getKarma(), $rss->getComments()]);
             }
+
             $table->render();
+            $io->success(sprintf('Showing %s results', count($queuedRss)));
+
         }
         else
         {
-            $io->success('Queued Rss not found!');
+            $io->success('Queued Rss results not found!');
         }
     }
 }
